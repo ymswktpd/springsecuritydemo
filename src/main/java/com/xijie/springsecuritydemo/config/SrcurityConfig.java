@@ -1,5 +1,7 @@
 package com.xijie.springsecuritydemo.config;
 
+import com.xijie.springsecuritydemo.handle.MyAuthenticationFailureHandler;
+import com.xijie.springsecuritydemo.handle.MyAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,14 +21,18 @@ public class SrcurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception{
         //表单提交
         http.formLogin()
+//                .usernameParameter("username123")
+//                .passwordParameter("password 123")
                 //当发现是/login时认为是登录，必须和表单提交的地址一样，去执行UserDetailServiceImpl
                 .loginProcessingUrl("/login")
                 //自定义登录页面
                 .loginPage("/login.html")
                 //登录成功后的跳转必须是POST请求
-                .successForwardUrl("/toMain")
+//                .successForwardUrl("/toMain")
+                .successHandler(new MyAuthenticationSuccessHandler("http://www.baidu.com"))
                 //登录失败后的跳转必须是POST请求
-                .failureForwardUrl("/toError");
+//                .failureForwardUrl("/toError");
+                .failureHandler(new MyAuthenticationFailureHandler("/error.html "));
         //授权认证
         http.authorizeRequests()
                 //放过
